@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\BlogController;
+use Tightenco\Ziggy\Ziggy;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -12,6 +14,9 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+Route::get('/ziggy.js', function () {
+    return response()->view('ziggy')->header('Content-Type', 'application/javascript');
 });
 
 Route::get('/dashboard', function () {
@@ -24,4 +29,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::middleware('auth')->group(function () {
+    Route::get('/blogs', [BlogController::class, 'index']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::put('/blogs/{blog}', [BlogController::class, 'update']);
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
+});
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::get('/blogs', [BlogController::class, 'index']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::put('/blogs/{blog}', [BlogController::class, 'update']);
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
+});
 require __DIR__.'/auth.php';

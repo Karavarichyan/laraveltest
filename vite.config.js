@@ -17,4 +17,7 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        outDir: 'public/build', // Указываем Vite сохранять сборку в public/build
+    },
 });
